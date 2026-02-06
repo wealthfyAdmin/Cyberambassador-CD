@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cyberambassador-backend
+  labels:
+    app: cyberambassador-backend
+spec:
+  # replicas: 1  will be handled by the HPA
+  selector:
+    matchLabels:
+      app: cyberambassador-backend
+  template:
+    metadata:
+      labels:
+        app: cyberambassador-backend
+    spec:
+      # =========================
+      # POD LEVEL SECURITY
+      # =========================
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        fsGroupChangePolicy: "OnRootMismatch"
+
+      containers:
+        - name: backend
+          image: finriustech/cyberambassador-backend:dff67d0
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 3000
+
+          # =========================
+          # CONTAINER SECURITY
+          # =========================
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+
+          # =========================
+          # RESOURCE LIMITS
+          # =========================
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+
+          # =========================
+          # TEMP WRITE SPACE
+          # =========================
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+
+      volumes:
+        - name: tmp
+          emptyDir: {}
