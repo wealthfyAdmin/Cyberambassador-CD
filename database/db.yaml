@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cyberambassador-postgres
+  namespace: cyber-ambassador
+  labels:
+    app: cyberambassador-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cyberambassador-postgres
+  template:
+    metadata:
+      labels:
+        app: cyberambassador-postgres
+    spec:
+      securityContext:
+        fsGroup: 999
+
+      containers:
+        - name: postgres
+          image: postgres:16-slim
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 5432
+
+          env:
+            - name: POSTGRES_DB
+              value: cyberambassador
+            - name: POSTGRES_USER
+              value: cyberambassador
+            - name: POSTGRES_PASSWORD
+              value: cyberambassador_password
+
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "250m"
+              memory: "512Mi"
+
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+
+      volumes:
+        - name: postgres-data
+          emptyDir: {}
