@@ -2,10 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cyberambassador-backend
+  namespace: cyber-ambassador
   labels:
     app: cyberambassador-backend
 spec:
-  # replicas: 1  will be handled by the HPA
   selector:
     matchLabels:
       app: cyberambassador-backend
