@@ -26,13 +26,25 @@ spec:
           ports:
             - containerPort: 5432
 
+          # ✅ MAP CONFIG + SECRET → POSTGRES VARIABLES
           env:
             - name: POSTGRES_DB
-              value: cyberambassador
+              valueFrom:
+                configMapKeyRef:
+                  name: cyberambassador
+                  key: DB_NAME
+
             - name: POSTGRES_USER
-              value: cyberambassador
+              valueFrom:
+                configMapKeyRef:
+                  name: cyberambassador
+                  key: DB_USER
+
             - name: POSTGRES_PASSWORD
-              value: cyberambassador_password
+              valueFrom:
+                secretKeyRef:
+                  name: cyberambassador
+                  key: DB_PASS
 
           resources:
             requests:
