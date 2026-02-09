@@ -4,7 +4,7 @@ metadata:
   name: cyberambassador-postgres
   namespace: cyber-ambassador
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "0"
   labels:
     app: cyberambassador-postgres
 spec:

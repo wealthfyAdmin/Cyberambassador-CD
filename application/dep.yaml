@@ -4,7 +4,7 @@ metadata:
   name: cyberambassador-backend
   namespace: cyber-ambassador
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     app: cyberambassador-backend
 spec:
