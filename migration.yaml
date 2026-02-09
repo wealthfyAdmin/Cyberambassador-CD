@@ -1,0 +1,88 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cyberambassador-db-migrate
+  namespace: cyber-ambassador
+  annotations:
+    # Run BEFORE app deployment
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "1"
+
+    # Clean up after success
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app: cyberambassador-db-migrate
+    spec:
+      restartPolicy: Never
+
+      # =========================
+      # POD SECURITY (SAME AS APP)
+      # =========================
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        fsGroupChangePolicy: "OnRootMismatch"
+
+      containers:
+        - name: migrate
+          image: finriustech/cyberambassador-backend:dff67d0
+          imagePullPolicy: IfNotPresent
+
+          # =========================
+          # RUN MIGRATION
+          # =========================
+          command:
+            - sh
+            - -c
+            - |
+              echo "Starting database migrations..."
+              npm run migrate
+              echo "Database migrations completed."
+
+          # =========================
+          # LOAD SAME ENVS AS BACKEND
+          # =========================
+          envFrom:
+            - configMapRef:
+                name: cyberambassador
+            - secretRef:
+                name: cyberambassador
+
+          # =========================
+          # CONTAINER SECURITY
+          # =========================
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+
+          # =========================
+          # RESOURCES
+          # =========================
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+
+          # =========================
+          # TEMP FS (FOR NODE / NPM)
+          # =========================
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+
+      volumes:
+        - name: tmp
+          emptyDir: {}
