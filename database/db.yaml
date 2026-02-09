@@ -57,6 +57,7 @@ spec:
 
           securityContext:
             runAsUser: 999          # ✅ REQUIRED
+            runAsGroup: 999
             runAsNonRoot: true
             allowPrivilegeEscalation: false
             capabilities:
