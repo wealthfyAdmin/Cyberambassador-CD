@@ -7,7 +7,7 @@ spec:
   parentRefs:
     - name: solvox-gateway
       namespace: gateway-system
-      sectionName: https
+      sectionName: cyberambassador-https
 
   hostnames:
     - api.cyberambassador.co.in
