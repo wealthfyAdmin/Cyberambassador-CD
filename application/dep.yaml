@@ -14,9 +14,6 @@ spec:
       labels:
         app: cyberambassador-backend
     spec:
-      # =========================
-      # POD LEVEL SECURITY
-      # =========================
       securityContext:
         runAsUser: 1001
         runAsGroup: 1001
@@ -31,9 +28,13 @@ spec:
           ports:
             - containerPort: 3000
 
-          # =========================
-          # CONTAINER SECURITY
-          # =========================
+          # ✅ LOAD ENVS FROM CONFIGMAP + SEALED SECRET
+          envFrom:
+            - configMapRef:
+                name: cyberambassador
+            - secretRef:
+                name: cyberambassador
+
           securityContext:
             runAsNonRoot: true
             allowPrivilegeEscalation: false
@@ -44,9 +45,6 @@ spec:
             seccompProfile:
               type: RuntimeDefault
 
-          # =========================
-          # RESOURCE LIMITS
-          # =========================
           resources:
             requests:
               cpu: "250m"
@@ -55,9 +53,6 @@ spec:
               cpu: "250m"
               memory: "256Mi"
 
-          # =========================
-          # TEMP WRITE SPACE
-          # =========================
           volumeMounts:
             - name: tmp
               mountPath: /tmp
