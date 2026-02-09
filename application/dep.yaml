@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: cyberambassador-backend
   namespace: cyber-ambassador
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   labels:
     app: cyberambassador-backend
 spec:

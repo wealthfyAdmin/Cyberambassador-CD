@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: cyberambassador
   namespace: cyber-ambassador
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 data:
   PORT: "3000"
   DB_HOST: "cyberambassador-postgres"

@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: cyberambassador-postgres
   namespace: cyber-ambassador
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     app: cyberambassador-postgres
 spec:
@@ -26,7 +28,6 @@ spec:
           ports:
             - containerPort: 5432
 
-          # ✅ MAP CONFIG + SECRET → POSTGRES VARIABLES
           env:
             - name: POSTGRES_DB
               valueFrom:
@@ -55,6 +56,7 @@ spec:
               memory: "512Mi"
 
           securityContext:
+            runAsUser: 999          # ✅ REQUIRED
             runAsNonRoot: true
             allowPrivilegeEscalation: false
             capabilities:
