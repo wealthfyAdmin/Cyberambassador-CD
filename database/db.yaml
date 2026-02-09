@@ -47,6 +47,10 @@ spec:
                   name: cyberambassador
                   key: DB_PASS
 
+            # ✅ REQUIRED
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+
           resources:
             requests:
               cpu: "250m"
@@ -56,7 +60,7 @@ spec:
               memory: "512Mi"
 
           securityContext:
-            runAsUser: 999          # ✅ REQUIRED
+            runAsUser: 999
             runAsGroup: 999
             runAsNonRoot: true
             allowPrivilegeEscalation: false
@@ -66,9 +70,10 @@ spec:
             seccompProfile:
               type: RuntimeDefault
 
+          # ✅ Mount parent dir ONLY
           volumeMounts:
             - name: postgres-data
-              mountPath: /var/lib/postgresql/data/pgdata
+              mountPath: /var/lib/postgresql/data
 
       volumes:
         - name: postgres-data
