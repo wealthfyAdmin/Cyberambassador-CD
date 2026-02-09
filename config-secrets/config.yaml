@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cyberambassador
+  namespace: cyber-ambassador
+data:
+  PORT: "3000"
+  DB_HOST: "cyberambassador-postgres"
+  DB_PORT: "5432"
+  DB_NAME: "cyberambassador_db"
+  DB_USER: "cyberambassador_user"
+  MAIL_HOST: "smtp.hostinger.com"
+  MAIL_PORT: "465"
+  MAIL_USER: "noreply@cyberambassador.co.in"
+  MAIL_FROM: "noreply@cyberambassador.co.in"
+  BACKEND_URL: "https://api.cyberambassador.co.in"
