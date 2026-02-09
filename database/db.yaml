@@ -20,7 +20,7 @@ spec:
 
       containers:
         - name: postgres
-          image: postgres:16-slim
+          image: postgres:16
           imagePullPolicy: IfNotPresent
 
           ports:
