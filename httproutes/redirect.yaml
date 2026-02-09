@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: cyberambassador-http-redirect
+  namespace: gateway-system
+spec:
+  parentRefs:
+    - name: solvox-gateway
+      namespace: gateway-system
+      sectionName: http
+
+  hostnames:
+    - api.cyberambassador.co.in
+
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
